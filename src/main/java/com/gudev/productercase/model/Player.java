@@ -16,11 +16,18 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    public Player(String name, String surname, Position position) {
+        this.name = name;
+        this.surname = surname;
+        this.position = position;
+    }
+
     private String name;
 
     private String surname;
 
     @Enumerated(EnumType.STRING)
     private Position position;
+
 
 }
