@@ -20,27 +20,24 @@ public class PlayerService {
     private int maxPlayerCount;
 
     private final PlayerRepository playerRepository;
-    private final CreatePlayerConverter converter;
 
 
-    public PlayerService(PlayerRepository playerRepository, CreatePlayerConverter converter) {
+    public PlayerService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
-        this.converter = converter;
     }
 
     public List<Player> getAllPlayers() {
         return playerRepository.findAll();
     }
 
-    public Player create(CreatePlayer createPlayer) {
+    public Player create(Player player) {
 
         final int personCount = playerRepository.findAll().size();
+        int threshold = maxPlayerCount == 0 ? 5 : maxPlayerCount;
 
-        if (personCount >= maxPlayerCount) {
+        if (personCount >= threshold) {
             throw new PlayerCountReachedToMaxEception("team has reached to max count");
         }
-
-        Player player = converter.dtoToEntity(createPlayer);
         return playerRepository.save(player);
     }
 
