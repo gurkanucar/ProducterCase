@@ -56,7 +56,7 @@ To run tests, run the following command
 ```graphql
 query {
   getAllPlayer {
-     id position name surname    
+    position name surname id   
   }
 }
 ```
