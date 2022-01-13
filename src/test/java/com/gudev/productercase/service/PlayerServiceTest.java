@@ -13,29 +13,35 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@SpringBootTest(properties = {"maxPlayerCount = 5"})
+
 class PlayerServiceTest extends TestSupport {
 
 
     private PlayerService playerService;
-    private CreatePlayerConverter converter;
     private PlayerRepository playerRepository;
 
 
     @BeforeEach
     void setup() {
+
         playerRepository = Mockito.mock(PlayerRepository.class);
-        converter = Mockito.mock(CreatePlayerConverter.class);
-        playerService = new PlayerService(playerRepository, converter);
+        playerService = new PlayerService(playerRepository);
+
     }
 
 
@@ -55,16 +61,12 @@ class PlayerServiceTest extends TestSupport {
         Mockito.when(playerRepository.findAll())
                 .thenReturn(Collections.emptyList());
 
-        Mockito.when(playerRepository.save(expected))
-                .thenReturn(expected);
+        Mockito.doReturn(expected).when(playerRepository).save(expected);
 
+        final var actual = playerService.create(expected);
 
-        final var createPlayer = generateCreatePlayer("ahmet");
-
-        final var actual = playerService.create(createPlayer);
-
-        Assertions.assertEquals(expected, actual);
         Mockito.verify(playerRepository).save(expected);
+        Assertions.assertEquals(expected, actual);
 
 
     }
@@ -72,7 +74,10 @@ class PlayerServiceTest extends TestSupport {
     @Test
     @DisplayName("create player when person count has reached to max person count throw exception")
     public void testCreatePlayer_whenMaxPersonCountReached() {
-        final var createPlayer = generateCreatePlayer("ahmet");
+        final var createPlayer = generatePlayer("ahmet");
+
+        Mockito.when(playerRepository.findAll())
+                .thenReturn(Collections.nCopies(10, generatePlayer(1L)));
 
         Throwable exception = Assertions.assertThrows(PlayerCountReachedToMaxEception.class,
                 () -> playerService.create(createPlayer));
