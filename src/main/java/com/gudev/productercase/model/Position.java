@@ -1,10 +1,10 @@
 package com.gudev.productercase.model;
 
 public enum Position {
-    PG("PG"),
-    SG("SG"),
-    SF("SF"),
-    PF("PF"),
+    PG("Point guard"),
+    SG("Shooting guard"),
+    SF("Small forward"),
+    PF("Power forward"),
     C("Center");
 
     public final String label;
