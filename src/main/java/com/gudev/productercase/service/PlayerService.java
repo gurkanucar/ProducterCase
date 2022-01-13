@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class PlayerService {
 
-    @Value("maxPlayerCount")
+    @Value("${maxPlayerCount}")
     private int maxPlayerCount;
 
     private final PlayerRepository playerRepository;
