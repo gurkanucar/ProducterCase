@@ -106,21 +106,10 @@ mutation {
 ```javascript
 {
     "data": {
-        "getAllPlayer": [
-            {
-                "position": "PF",
-                "name": "Michael",
-                "surname": "Jordan",
-                "id": "1"
-            },
-            {
-                "position": "C",
-                "name": "LeBron",
-                "surname": "James",
-                "id": "2"
-            },
-           .............
-        ]
+        "addPlayer": {
+            "name": "Hidayet",
+            "position": "SF"
+        }
     }
 }
 ```
